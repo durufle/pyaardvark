@@ -1,0 +1,6 @@
+Sphinx
+sphinx-rtd-theme
+wheel
+devpi-web
+devpi-client
+bump2version

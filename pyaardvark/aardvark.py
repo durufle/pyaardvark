@@ -102,34 +102,44 @@ AA_LIBRARY_LOADED = \
 # ==========================================================================
 # HELPER FUNCTIONS
 # ==========================================================================
-def array_u08(n):  return array('B', [0] * n)
+def array_u08(n):
+    return array('B', [0] * n)
 
 
-def array_u16(n):  return array('H', [0] * n)
+def array_u16(n):
+    return array('H', [0] * n)
 
 
-def array_u32(n):  return array('I', [0] * n)
+def array_u32(n):
+    return array('I', [0] * n)
 
 
-def array_u64(n):  return array('K', [0] * n)
+def array_u64(n):
+    return array('K', [0] * n)
 
 
-def array_s08(n):  return array('b', [0] * n)
+def array_s08(n):
+    return array('b', [0] * n)
 
 
-def array_s16(n):  return array('h', [0] * n)
+def array_s16(n):
+    return array('h', [0] * n)
 
 
-def array_s32(n):  return array('i', [0] * n)
+def array_s32(n):
+    return array('i', [0] * n)
 
 
-def array_s64(n):  return array('L', [0] * n)
+def array_s64(n):
+    return array('L', [0] * n)
 
 
-def array_f32(n):  return array('f', [0] * n)
+def array_f32(n):
+    return array('f', [0] * n)
 
 
-def array_f64(n):  return array('d', [0] * n)
+def array_f64(n):
+    return array('d', [0] * n)
 
 
 # ==========================================================================
@@ -249,25 +259,25 @@ class AardvarkVersion:
 #
 # Returns the number of devices found, regardless of the
 # array size.
+
+# All arrays can be passed into the API as an ArrayType object or as
+# a tuple (array, length), where array is an ArrayType object and
+# length is an integer.  The user-specified length would then serve
+# as the length argument to the API funtion (please refer to the
+# product datasheet).  If only the array is provided, the array's
+# intrinsic length is used as the argument to the underlying API
+# function.
+#
+# Additionally, for arrays that are filled by the API function, an
+# integer can be passed in place of the array argument and the API
+# will automatically create an array of that length.  All output
+# arrays, whether passed in or generated, are passed back in the
+# returned tuple.
+
 AA_PORT_NOT_FREE = 0x8000
 
 
 def aa_find_devices(devices):
-    """usage: (int return, u16[] devices) = aa_find_devices(u16[] devices)
-
-    All arrays can be passed into the API as an ArrayType object or as
-    a tuple (array, length), where array is an ArrayType object and
-    length is an integer.  The user-specified length would then serve
-    as the length argument to the API funtion (please refer to the
-    product datasheet).  If only the array is provided, the array's
-    intrinsic length is used as the argument to the underlying API
-    function.
-
-    Additionally, for arrays that are filled by the API function, an
-    integer can be passed in place of the array argument and the API
-    will automatically create an array of that length.  All output
-    arrays, whether passed in or generated, are passed back in the
-    returned tuple."""
 
     if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
     # devices pre-processing
@@ -295,22 +305,6 @@ def aa_find_devices(devices):
 # The IDs are the unsigned integer representation of the 10-digit
 # serial numbers.
 def aa_find_devices_ext(devices, unique_ids):
-    """usage: (int return, u16[] devices, u32[] unique_ids) = aa_find_devices_ext(u16[] devices, u32[] unique_ids)
-
-    All arrays can be passed into the API as an ArrayType object or as
-    a tuple (array, length), where array is an ArrayType object and
-    length is an integer.  The user-specified length would then serve
-    as the length argument to the API funtion (please refer to the
-    product datasheet).  If only the array is provided, the array's
-    intrinsic length is used as the argument to the underlying API
-    function.
-
-    Additionally, for arrays that are filled by the API function, an
-    integer can be passed in place of the array argument and the API
-    will automatically create an array of that length.  All output
-    arrays, whether passed in or generated, are passed back in the
-    returned tuple."""
-
     if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
     # devices pre-processing
     __devices = isinstance(devices, int)
@@ -333,7 +327,8 @@ def aa_find_devices_ext(devices, unique_ids):
     # Call API function
     (_ret_) = api.py_aa_find_devices_ext(num_devices, num_ids, devices, unique_ids)
     # devices post-processing
-    if __devices: del devices[max(0, min(_ret_, len(devices))):]
+    if __devices:
+        del devices[max(0, min(_ret_, len(devices))):]
     # unique_ids post-processing
     if __unique_ids: del unique_ids[max(0, min(_ret_, len(unique_ids))):]
     return _ret_, devices, unique_ids
@@ -353,8 +348,6 @@ def aa_find_devices_ext(devices, unique_ids):
 # where extended information is not required.  For more complex
 # applications, the use of aa_open_ext() is recommended.
 def aa_open(port_number):
-    """usage: Aardvark return = aa_open(int port_number)"""
-
     if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     return api.py_aa_open(port_number)
@@ -384,9 +377,8 @@ class AardvarkExt:
 
 
 def aa_open_ext(port_number):
-    """usage: (Aardvark return, AardvarkExt aa_ext) = aa_open_ext(int port_number)"""
-
-    if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
+    if not AA_LIBRARY_LOADED:
+        return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     (_ret_, c_aa_ext) = api.py_aa_open_ext(port_number)
     # aa_ext post-processing
@@ -400,7 +392,8 @@ def aa_open_ext(port_number):
 def aa_close(aardvark):
     """usage: int return = aa_close(Aardvark aardvark)"""
 
-    if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
+    if not AA_LIBRARY_LOADED:
+        return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     return api.py_aa_close(aardvark)
 
@@ -427,7 +420,8 @@ AA_FEATURE_I2C_MONITOR = 0x00000010
 def aa_features(aardvark):
     """usage: int return = aa_features(Aardvark aardvark)"""
 
-    if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
+    if not AA_LIBRARY_LOADED:
+        return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     return api.py_aa_features(aardvark)
 
@@ -439,7 +433,8 @@ def aa_features(aardvark):
 def aa_unique_id(aardvark):
     """usage: u32 return = aa_unique_id(Aardvark aardvark)"""
 
-    if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
+    if not AA_LIBRARY_LOADED:
+        return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     return api.py_aa_unique_id(aardvark)
 
@@ -479,7 +474,8 @@ def aa_log(aardvark, level, handle):
 def aa_version(aardvark):
     """usage: (int return, AardvarkVersion version) = aa_version(Aardvark aardvark)"""
 
-    if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
+    if not AA_LIBRARY_LOADED:
+        return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     (_ret_, c_version) = api.py_aa_version(aardvark)
     # version post-processing
@@ -505,7 +501,8 @@ AA_CONFIG_I2C_MASK = 0x00000002
 def aa_configure(aardvark, config):
     """usage: int return = aa_configure(Aardvark aardvark, AardvarkConfig config)"""
 
-    if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
+    if not AA_LIBRARY_LOADED:
+        return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     return api.py_aa_configure(aardvark, config)
 
@@ -520,7 +517,8 @@ AA_TARGET_POWER_QUERY = 0x80
 def aa_target_power(aardvark, power_mask):
     """usage: int return = aa_target_power(Aardvark aardvark, u08 power_mask)"""
 
-    if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
+    if not AA_LIBRARY_LOADED:
+        return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     return api.py_aa_target_power(aardvark, power_mask)
 
@@ -554,7 +552,8 @@ AA_ASYNC_I2C_MONITOR = 0x00000008
 def aa_async_poll(aardvark, timeout):
     """usage: int return = aa_async_poll(Aardvark aardvark, int timeout)"""
 
-    if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
+    if not AA_LIBRARY_LOADED:
+        return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     return api.py_aa_async_poll(aardvark, timeout)
 
@@ -566,7 +565,8 @@ def aa_async_poll(aardvark, timeout):
 def aa_i2c_free_bus(aardvark):
     """usage: int return = aa_i2c_free_bus(Aardvark aardvark)"""
 
-    if not AA_LIBRARY_LOADED: return AA_INCOMPATIBLE_LIBRARY
+    if not AA_LIBRARY_LOADED:
+        return AA_INCOMPATIBLE_LIBRARY
     # Call API function
     return api.py_aa_i2c_free_bus(aardvark)
 

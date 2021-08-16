@@ -45,8 +45,8 @@ def blast_bytes(handle, filename):
     # Open the file
     try:
         f = open(filename, 'rb')
-    except:
-        print("Unable to open file '" + filename + "'")
+    except IOError as e:
+        print("I/O error({0}): {2} ({1})".format(e.errno, filename, e.strerror))
         return
 
     trans_num = 0

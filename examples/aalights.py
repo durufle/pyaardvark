@@ -41,27 +41,29 @@ I2C_BITRATE = 100  # kHz
 # ==========================================================================
 # FUNCTIONS
 # ==========================================================================
-def flash_lights (handle):
+def flash_lights(handle):
     data_out = array('B', [0, 0])
 
     # Configure I/O expander lines as outputs
     data_out[0] = 0x03
     data_out[1] = 0x00
     res = aa_i2c_write(handle, 0x38, AA_I2C_NO_FLAGS, data_out)
-    if (res < 0): return res
+    if res < 0:
+        return res
 
-    if (res == 0):
+    if res == 0:
         print("error: slave device 0x38 not found")
         return 0
 
     # Turn lights on in sequence
     i = 0xff
-    while (i != 0):
+    while i != 0:
         i = ((i<<1) & 0xff)
         data_out[0] = 0x01
         data_out[1] = i
         res = aa_i2c_write(handle, 0x38, AA_I2C_NO_FLAGS, data_out)
-        if (res < 0): return res
+        if res < 0:
+            return res
         aa_sleep_ms(70)
 
     # Leave lights on for 100 ms
@@ -69,12 +71,13 @@ def flash_lights (handle):
 
     # Turn lights off in sequence
     i = 0x00
-    while (i != 0xff):
+    while i != 0xff:
         i = ((i<<1) | 0x01)
         data_out[0] = 0x01
         data_out[1] = i
         res = aa_i2c_write(handle, 0x38, AA_I2C_NO_FLAGS, data_out)
-        if (res < 0): return res
+        if res < 0:
+            return res
         aa_sleep_ms(70)
 
     aa_sleep_ms(100)
@@ -83,7 +86,8 @@ def flash_lights (handle):
     data_out[0] = 0x03
     data_out[1] = 0xff
     res = aa_i2c_write(handle, 0x38, AA_I2C_NO_FLAGS, data_out)
-    if (res < 0): return res
+    if res < 0:
+        return res
 
     return 0
 

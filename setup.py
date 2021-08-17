@@ -8,7 +8,7 @@ setup(
     name=name,
     version=version,
     packages=find_packages(),
-    package_data={'': ['aardvark.dll']},
+    include_package_data=True,
     classifiers=[
         'License :: OSI Approved ::  Massachusetts Institute of Technology (MIT)',
         'Operating System :: Microsoft :: Windows :: Windows 10',

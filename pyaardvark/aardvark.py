@@ -66,9 +66,16 @@ def import_library():
     global api
 
     import platform
+    print(platform.system())
     ext = platform.system() == 'Windows' and '.dll' or '.so'
     dir = os.path.dirname(os.path.abspath(__file__))
-    lib = os.path.join(dir, 'aardvark' + ext)
+    if ext == '.so':
+        lib = os.path.join(dir, 'lib/linux/aardvark' + ext)
+    elif ext == '.dll':
+        lib = os.path.join(dir, 'lib/win/aardvark' + ext)
+    else:
+        print("Library not found...")
+        sys.exit(-1)
 
     try:
         if sys.version_info >= (3, 4):

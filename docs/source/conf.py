@@ -22,7 +22,7 @@ copyright = '2021, UL-IMS'
 author = 'Laurent Bonnet'
 
 # The full version, including alpha/beta/rc tags
-version = "0.0.0"
+version = "0.1.0"
 release = version
 
 

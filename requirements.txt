@@ -1,5 +1,4 @@
-Sphinx
-sphinx-rtd-theme
+sphinx
 wheel
 devpi-web
 devpi-client
